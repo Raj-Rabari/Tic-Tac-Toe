@@ -6,17 +6,15 @@ const board = [
   [null, null, null],
 ];
 
-export default function GameBoard() {
-  const [gameBoard, setGameBoard] = useState(board);
-  const [isPlayer1,setIsPlayer1] = useState(true);
+export default function GameBoard({turns,onSelectSquare}) {
 
-  function handleClick(index1,index2) {
-    setIsPlayer1((isPlayer1) => !isPlayer1);
-    setGameBoard((prevGameBoard) => {
-        const tempBoard = structuredClone(prevGameBoard);
-        tempBoard[index1][index2] = isPlayer1 ? 'X' : 'O';
-        return tempBoard;
-    });
+  let gameBoard = board;
+
+  for (const turn of turns) {
+    const {square,player} = turn;
+    const {row,col} = square;
+
+    gameBoard[row][col] = player;
   }
 
   return (
@@ -26,7 +24,7 @@ export default function GameBoard() {
           <ol>
             {row.map((playerSymbol, index2) => (
               <li key={index2}>
-                <button onClick={() => handleClick(index,index2)}>{playerSymbol}</button>
+                <button onClick={() => onSelectSquare(index,index2)} disabled={playerSymbol}>{playerSymbol}</button>
               </li>
             ))}
           </ol>
